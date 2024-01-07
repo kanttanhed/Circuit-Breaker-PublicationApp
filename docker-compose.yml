@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  publication-db:
+    image: mongo:latest
+    container_name: publication-db
+    restart: always
+    networks:
+      - circuit-breaker
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    ports:
+      - 27017:27017
+
+networks:
+  circuit-breaker:
+    driver: bridge
