@@ -4,7 +4,7 @@ services:
 
   publication-db:
     image: mongo:latest
-    container_name: publication-db
+    container_name: authentication-db
     restart: always
     networks:
       - circuit-breaker
