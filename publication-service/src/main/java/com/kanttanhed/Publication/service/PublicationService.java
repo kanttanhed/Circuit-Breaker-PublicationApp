@@ -1,5 +1,6 @@
 package com.kanttanhed.Publication.service;
 
+import com.kanttanhed.Publication.client.CommentClient;
 import com.kanttanhed.Publication.domain.Publication;
 import com.kanttanhed.Publication.mapper.PublicationMapper;
 import com.kanttanhed.Publication.repository.PublicationRepository;
@@ -17,6 +18,9 @@ public class PublicationService {
     @Autowired
     PublicationMapper publicationMapper;
 
+    @Autowired
+    CommentClient commentClient;
+
     public void insert(Publication publication){
         // Convert the publication object to a publication entity using the mapper
         var publicationEntity = publicationMapper.toPublicationEntity(publication);
@@ -32,10 +36,14 @@ public class PublicationService {
     }
 
     public Publication findById(String id){
-        // Retrieve the publication entity by ID from the repository, convert it to a publication object
-        // If not found, throw a RuntimeException
-        return publicationRepository.findById(id)
+        var publication = publicationRepository.findById(id)
                 .map(publicationMapper::toPublication)
                 .orElseThrow(RuntimeException::new);
+
+        var comments = commentClient.getComments(id);
+        publication.setComments(comments);
+
+        return publication;
     }
+
 }
