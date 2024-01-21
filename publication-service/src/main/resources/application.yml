@@ -5,3 +5,7 @@ spring:
       database: admin
 server:
   port: 3005
+
+client:
+  comments:
+    url: http://localhost:8083
