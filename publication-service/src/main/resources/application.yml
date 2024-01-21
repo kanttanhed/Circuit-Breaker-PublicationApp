@@ -9,3 +9,9 @@ server:
 client:
   comments:
     url: http://localhost:8083
+
+resilience4j.circuitbreaker:
+  instances:
+    comments:
+      slidingWindowSize: 8
+      minimumNumberOfCalls: 4
