@@ -27,7 +27,7 @@ public class ApiExceptionHandler {
                 .build();
 
         // Logging the error with the error details and the exception
-            //log.error("[ERROR] payload={}", error, exception);
+        log.error("[ERROR] payload={}", error, exception);
         // Returning a ResponseEntity with the error information and an HTTP status of 500
         return ResponseEntity.internalServerError().body(error);
     }

@@ -2,14 +2,17 @@ package com.kanttanhed.Publication.service;
 
 import com.kanttanhed.Publication.client.CommentClient;
 import com.kanttanhed.Publication.domain.Publication;
+import com.kanttanhed.Publication.exception.FallbackException;
 import com.kanttanhed.Publication.mapper.PublicationMapper;
 import com.kanttanhed.Publication.repository.PublicationRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class PublicationService {
 
@@ -36,7 +39,7 @@ public class PublicationService {
                .map(publicationMapper::toPublication).toList();
     }
 
-    @CircuitBreaker(name = "comments")
+    @CircuitBreaker(name = "comments", fallbackMethod = "findByIdFallback")
     public Publication findById(String id){
         var publication = publicationRepository.findById(id)
                 .map(publicationMapper::toPublication)
@@ -48,4 +51,8 @@ public class PublicationService {
         return publication;
     }
 
+    public Publication findByIdFallback(String id, Throwable cause) {
+       log.warn("[warn] fallback with id {}", id);
+       throw new FallbackException(cause);
+    }
 }
