@@ -23,7 +23,7 @@ public class PublicationService {
     PublicationMapper publicationMapper;
 
     @Autowired
-    CommentClient commentClient;
+    CommentService commentService;
 
     public void insert(Publication publication){
         // Convert the publication object to a publication entity using the mapper
@@ -39,20 +39,13 @@ public class PublicationService {
                .map(publicationMapper::toPublication).toList();
     }
 
-    @CircuitBreaker(name = "comments", fallbackMethod = "findByIdFallback")
-    public Publication findById(String id){
+    public Publication findById(String id) {
         var publication = publicationRepository.findById(id)
                 .map(publicationMapper::toPublication)
                 .orElseThrow(RuntimeException::new);
 
-        var comments = commentClient.getComments(id);
+        var comments = commentService.getComments(id);
         publication.setComments(comments);
-
         return publication;
-    }
-
-    public Publication findByIdFallback(String id, Throwable cause) {
-       log.warn("[warn] fallback with id {}", id);
-       throw new FallbackException(cause);
     }
 }
