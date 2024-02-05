@@ -26,20 +26,20 @@ public class PublicationController {
     // ResponseStatus sets the HTTP status to CREATED (201) for successful execution of this method
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void insert(@Valid @RequestBody PublicationRequest publicationRequest){
+    public void insert(@Valid @RequestBody PublicationRequest publicationRequest) {
         var publications = publicationMapper.toPublication(publicationRequest);
         publicationService.insert(publications);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Publication> listAll(){
+    public List<Publication> listAll() {
         return publicationService.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Publication listById(@PathVariable("id") String id){
+    public Publication findById(@PathVariable("id") String id) {
         return publicationService.findById(id);
     }
 }
